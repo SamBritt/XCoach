@@ -22,7 +22,8 @@ namespace XCoach.Controllers
         // GET: AthleteWorkouts
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.AthleteWorkouts.Include(a => a.Athlete).Include(a => a.Workout);
+            var applicationDbContext = _context.AthleteWorkouts.Include(a => a.Athlete)
+                                                               .Include(a => a.Workout);
             return View(await applicationDbContext.ToListAsync());
         }
 

@@ -22,7 +22,6 @@ namespace XCoach.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Required]
         public string StreetAddress { get; set; }
 
         public virtual ICollection<Race> Races { get; set; }

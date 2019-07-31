@@ -21,7 +21,6 @@ namespace XCoach.Models
         [Required]
         public int Grade { get; set; }
         public int MPW { get; set; }
-        [Required]
         public ApplicationUser User { get; set; }
         public virtual ICollection<AthleteRace> AthleteRaces { get; set; }
         public virtual ICollection<AthleteWorkout> AthleteWorkouts { get; set; }
