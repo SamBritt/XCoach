@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<XCoach.Models.Workout>
 
+
+
 @{
     ViewData["Title"] = "Index";
 }
@@ -19,7 +21,7 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.WorkoutTypeId)
+                @Html.DisplayNameFor(model => model.WorkoutType.Name)
             </th>
             <th></th>
         </tr>
@@ -34,7 +36,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.WorkoutTypeId)
+                @Html.DisplayFor(modelItem => item.WorkoutType.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
