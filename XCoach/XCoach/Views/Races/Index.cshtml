@@ -28,6 +28,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.EventDate)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AthleteRaces.Count)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -50,6 +53,10 @@
                 @Html.DisplayFor(modelItem => item.EventDate)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.AthleteRaces.Count)
+            </td>
+            <td>
+                <a asp-controller = "AthleteRaces" asp-action="Create" asp-route-id="@item.Id">Add Athletes</a> |
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>

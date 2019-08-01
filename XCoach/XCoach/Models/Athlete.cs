@@ -13,8 +13,10 @@ namespace XCoach.Models
         [Required]
         public string UserId { get; set; }
         [Required]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
         [Required]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
         [Required]
         public string Gender { get; set; }
