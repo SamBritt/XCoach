@@ -2,27 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using XCoach.Data;
 using XCoach.Models;
+using XCoach.Models.WorkoutViewModel;
 
 namespace XCoach.Controllers
 {
     public class WorkoutsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public WorkoutsController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public WorkoutsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
-
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
         // GET: Workouts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Workouts.ToListAsync());
+            var workouts = from w in _context.Workouts
+                           join w2 in _context.WorkoutTypes on w.WorkoutTypeId equals w2.Id
+                           where w.WorkoutTypeId.Equals(w2.Id)
+                           select new WorkoutIndexViewModel { Workout = w, WorkoutType = w2 };
+
+            //return View(await _context.Workouts.ToListAsync());
+            return View(workouts);
         }
 
         // GET: Workouts/Details/5
@@ -44,9 +53,22 @@ namespace XCoach.Controllers
         }
 
         // GET: Workouts/Create
-        public IActionResult Create()
+
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var CurrentUser = await GetCurrentUserAsync();
+            var viewModel = new WorkoutCreateViewModel
+            {
+                WorkoutTypes = await _context.WorkoutTypes.ToListAsync()
+            };
+            List<WorkoutType> typesToAdd = GetAllWorkoutTypes();
+            viewModel.WorkoutTypes = typesToAdd;
+            return View(viewModel);
+        }
+        public List<WorkoutType> GetAllWorkoutTypes()
+        {
+            var types = _context.WorkoutTypes.ToList();
+            return types;
         }
 
         // POST: Workouts/Create
@@ -54,15 +76,22 @@ namespace XCoach.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,Title,Description,WorkoutTypeId")] Workout workout)
+        public async Task<IActionResult> Create(WorkoutCreateViewModel viewModel)
         {
+            ModelState.Remove("Workout.UserId");
             if (ModelState.IsValid)
             {
+                var currentUser = await GetCurrentUserAsync();
+                var workout = viewModel.Workout;
+                workout.User = currentUser;
+                workout.UserId = currentUser.Id;
+                
                 _context.Add(workout);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(workout);
+            viewModel.WorkoutTypes = await _context.WorkoutTypes.ToListAsync();
+            return View(viewModel);
         }
 
         // GET: Workouts/Edit/5

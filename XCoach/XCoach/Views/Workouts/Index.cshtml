@@ -1,4 +1,4 @@
-﻿@model IEnumerable<XCoach.Models.Workout>
+﻿@model IEnumerable<XCoach.Models.WorkoutViewModel.WorkoutIndexViewModel>//IEnumerable<XCoach.Models.Workout>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,13 +13,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.Workout.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Workout.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.WorkoutTypeId)
+                @Html.DisplayNameFor(model => model.WorkoutType.Name)
             </th>
             <th></th>
         </tr>
@@ -28,18 +28,18 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                @Html.DisplayFor(modelItem => item.Workout.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @Html.DisplayFor(modelItem => item.Workout.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.WorkoutTypeId)
+                @Html.DisplayFor(modelItem => item.WorkoutType.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Workout.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Workout.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Workout.Id">Delete</a>
             </td>
         </tr>
 }
