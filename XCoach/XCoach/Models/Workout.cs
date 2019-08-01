@@ -19,6 +19,7 @@ namespace XCoach.Models
         public ApplicationUser User { get; set; }
         [Required]
         public int WorkoutTypeId { get; set; }
+        public WorkoutType WorkoutType { get; set; }
 
     }
 }

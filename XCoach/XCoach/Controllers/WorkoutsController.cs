@@ -25,12 +25,11 @@ namespace XCoach.Controllers
         // GET: Workouts
         public async Task<IActionResult> Index()
         {
-            var workouts = from w in _context.Workouts
-                           join w2 in _context.WorkoutTypes on w.WorkoutTypeId equals w2.Id
-                           where w.WorkoutTypeId.Equals(w2.Id)
-                           select new WorkoutIndexViewModel { Workout = w, WorkoutType = w2 };
+            var workouts = await _context.Workouts
+                .Include(w => w.WorkoutType)
+                .Where(w => w.WorkoutType.Id == w.WorkoutTypeId)
+                .ToListAsync() ;
 
-            //return View(await _context.Workouts.ToListAsync());
             return View(workouts);
         }
 
@@ -43,6 +42,7 @@ namespace XCoach.Controllers
             }
 
             var workout = await _context.Workouts
+                .Include(w => w.WorkoutType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (workout == null)
             {
