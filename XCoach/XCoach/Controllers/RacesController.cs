@@ -39,8 +39,11 @@ namespace XCoach.Controllers
             {
                 return NotFound();
             }
-
+            
             var race = await _context.Races
+                .Include(r => r.AthleteRaces)
+                .ThenInclude(ar => ar.Athlete)
+                .Where(a => a.Id == id)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (race == null)
             {

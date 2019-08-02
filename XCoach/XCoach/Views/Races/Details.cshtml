@@ -10,43 +10,76 @@
     <h4>Race</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.MeetName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MeetName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Location)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Location)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EventName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.EventName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Distance)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Distance) Meters
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EventDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.EventDate)
         </dd>
     </dl>
+    <table class="table">
+        @foreach (var item in Model.AthleteRaces)
+        {
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => item.Athlete.FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => item.Athlete.LastName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => item.ProjectedTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => item.ActualTime)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+         
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => item.Athlete.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.Athlete.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.ProjectedTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.ActualTime)
+                        </td>
+                    </tr>
+                
+            </tbody>
+        }
+    </table>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

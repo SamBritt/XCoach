@@ -50,7 +50,7 @@ namespace XCoach.Controllers
         public IActionResult Create()
         {
             ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName");
-            ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName");
+            //ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName");
             return View();
         }
 
@@ -59,16 +59,19 @@ namespace XCoach.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AthleteId,RaceId,ProjectedTime,ActualTime")] AthleteRace athleteRace)
+        public async Task<IActionResult> Create([Bind("AthleteId,ProjectedTime,ActualTime")] AthleteRace athleteRace, [FromRoute]int id)
         {
+            ModelState.Remove("RaceId");
+
             if (ModelState.IsValid)
             {
+                athleteRace.RaceId = id;
                 _context.Add(athleteRace);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteRace.AthleteId);
-            ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName", athleteRace.RaceId);
+            //ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName", athleteRace.RaceId);
             return View(athleteRace);
         }
 
