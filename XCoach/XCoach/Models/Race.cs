@@ -27,5 +27,6 @@ namespace XCoach.Models
         [Display(Name = "Event Date")]
         public DateTime EventDate { get; set; }
         public ICollection<AthleteRace> AthleteRaces { get; set; }
+        
     }
 }
