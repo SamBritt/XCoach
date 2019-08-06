@@ -20,6 +20,6 @@ namespace XCoach.Models
         [Required]
         public int WorkoutTypeId { get; set; }
         public WorkoutType WorkoutType { get; set; }
-
+        public virtual ICollection<AthleteWorkout> AthleteWorkouts { get; set; }
     }
 }
