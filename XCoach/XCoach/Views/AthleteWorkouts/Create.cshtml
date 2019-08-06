@@ -1,4 +1,4 @@
-﻿@model XCoach.Models.AthleteWorkout
+﻿@model XCoach.Models.AthleteWorkoutViewModel.AthleteWorkoutCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -12,33 +12,40 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<div class="form-group">
+            <label asp-for="AthleteId" class="control-label"></label>
+            <select asp-for="AthleteId" class="form-control" asp-items="ViewBag.AthleteId"></select>
+        </div>*@
+            @*@Html.DropDownList("AthleteId", (MultiSelectList)ViewBag.Athletes, new { multiple = "multiple" })*@
+            @*@Html.DropDownList("AthleteId", (MultiSelectList)ViewBag.Athletes, new { multiple = "multiple"})*@
             <div class="form-group">
-                <label asp-for="AthleteId" class="control-label"></label>
-                <select asp-for="AthleteId" class ="form-control" asp-items="ViewBag.AthleteId"></select>
+                <label asp-for="SelectedAthletes" class="control-label"></label>
+                @*asp-items are the options in the list *@
+                @*adding in the word 'multiple' makes it a multi-select list*@
+                <select asp-for="SelectedAthletes" multiple asp-items="@Model.AvailableAthletesSelectList"></select>
+                <span asp-validation-for="SelectedAthletes" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="AthleteWorkouts.Distance" class="control-label"></label>
+                <input asp-for="AthleteWorkouts.Distance" class="form-control" />
+                <span asp-validation-for="AthleteWorkouts.Distance" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="WorkoutId" class="control-label"></label>
-                <select asp-for="WorkoutId" class ="form-control" asp-items="ViewBag.WorkoutId"></select>
+                <label asp-for="AthleteWorkouts.Pace" class="control-label"></label>
+                <input asp-for="AthleteWorkouts.Pace" class="form-control" />
+                <span asp-validation-for="AthleteWorkouts.Pace" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Distance" class="control-label"></label>
-                <input asp-for="Distance" class="form-control" />
-                <span asp-validation-for="Distance" class="text-danger"></span>
+                <label asp-for="AthleteWorkouts.Repetition" class="control-label"></label>
+                <input asp-for="AthleteWorkouts.Repetition" class="form-control" />
+                <span asp-validation-for="AthleteWorkouts.Repetition" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Pace" class="control-label"></label>
-                <input asp-for="Pace" class="form-control" />
-                <span asp-validation-for="Pace" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Repetition" class="control-label"></label>
-                <input asp-for="Repetition" class="form-control" />
-                <span asp-validation-for="Repetition" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="WorkoutDate" class="control-label"></label>
-                <input asp-for="WorkoutDate" class="form-control" />
-                <span asp-validation-for="WorkoutDate" class="text-danger"></span>
+                <label asp-for="AthleteWorkouts.WorkoutDate" class="control-label"></label>
+                <input asp-for="AthleteWorkouts.WorkoutDate" class="form-control" />
+                <span asp-validation-for="AthleteWorkouts.WorkoutDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

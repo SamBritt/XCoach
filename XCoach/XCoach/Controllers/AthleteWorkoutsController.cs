@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using XCoach.Data;
 using XCoach.Models;
+using XCoach.Models.AthleteWorkoutViewModel;
 
 namespace XCoach.Controllers
 {
@@ -46,13 +47,20 @@ namespace XCoach.Controllers
 
             return View(athleteWorkout);
         }
+        public IActionResult Multiple(int[] athleteId)
+        {
+            return View();
+        }
 
         // GET: AthleteWorkouts/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName");
-            ViewData["WorkoutId"] = new SelectList(_context.Workouts, "Id", "Description");
-            return View();
+            var viewModel = new AthleteWorkoutCreateViewModel
+            {
+                AvailableAthletes = await _context.Athletes.ToListAsync()
+            };
+
+            return View(viewModel);
         }
 
         // POST: AthleteWorkouts/Create
@@ -60,17 +68,50 @@ namespace XCoach.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AthleteId,WorkoutId,Distance,Pace,Repetition,WorkoutDate")] AthleteWorkout athleteWorkout)
+        public async Task<IActionResult> Create(AthleteWorkoutCreateViewModel viewModel, [FromRoute] int id)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(athleteWorkout);
+                //athleteWorkout.WorkoutId = id;
+               // aw.WorkoutId = id;
+                //viewModel.AthleteWorkouts.WorkoutId = id;
+                //viewModel.AthleteWorkouts.WorkoutId = id;
+
+                List<int> AthleteIdsToPost = viewModel.SelectedAthletes;
+                
+                foreach (int i in AthleteIdsToPost)
+                {
+                    AthleteWorkout aw = new AthleteWorkout
+                    {
+                        AthleteId = i,
+                        WorkoutId = id,
+                        Pace = viewModel.AthleteWorkouts.Pace,
+                        Distance = viewModel.AthleteWorkouts.Distance,
+                        Repetition = viewModel.AthleteWorkouts.Repetition,
+                        WorkoutDate = viewModel.AthleteWorkouts.WorkoutDate
+                    };
+                    
+                    _context.Add(aw);
+                }
+                //athleteWorkout.AthleteIds = athleteIds;
+                
+                //_context.Add(viewModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteWorkout.AthleteId);
-            ViewData["WorkoutId"] = new SelectList(_context.Workouts, "Id", "Description", athleteWorkout.WorkoutId);
-            return View(athleteWorkout);
+            
+                //if (ModelState.IsValid)
+                //{
+                //    athleteWorkout.WorkoutId = id;
+                //    athleteWorkout.AthleteIds = athleteIds;
+                //    _context.Add(athleteWorkout);
+                //    await _context.SaveChangesAsync();
+                //    return RedirectToAction(nameof(Index));
+                //}
+            
+            //ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteWorkout.AthleteId);
+            //ViewData["WorkoutId"] = new SelectList(_context.Workouts, "Id", "Description", athleteWorkout.WorkoutId);
+            return View(viewModel);
         }
 
         // GET: AthleteWorkouts/Edit/5
