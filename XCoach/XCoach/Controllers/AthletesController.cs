@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using XCoach.Data;
 using XCoach.Models;
+using XCoach.Models.AthleteViewModel;
 
 namespace XCoach.Controllers
 {
@@ -38,16 +39,25 @@ namespace XCoach.Controllers
             {
                 return NotFound();
             }
-
+            
             var athlete = await _context.Athletes
-                .Include(a => a.User)
+                .Include(a => a.AthleteRaces)
+                .Include(a => a.AthleteWorkouts)
+                .ThenInclude(aw => aw.Workout)
+                .Where(a => a.Id == id)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (athlete == null)
             {
                 return NotFound();
             }
+            AthleteDetailsViewModel model = new AthleteDetailsViewModel
+            {
+                Athlete = athlete,
+                AthleteWorkouts = await _context.AthleteWorkouts.Select(a => a).Where(a => a.AthleteId == id).ToListAsync(),
 
-            return View(athlete);
+            };
+
+            return View(model);
         }
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
