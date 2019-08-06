@@ -98,13 +98,13 @@ namespace XCoach.Controllers
             {
                 return NotFound();
             }
-
+            var currentUser = await GetCurrentUserAsync();
             var athlete = await _context.Athletes.FindAsync(id);
             if (athlete == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", athlete.UserId);
+            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", athlete.UserId);
             return View(athlete);
         }
 
@@ -113,8 +113,13 @@ namespace XCoach.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,FirstName,LastName,Gender,Grade,MPW")] Athlete athlete)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Gender,Grade,MPW")] Athlete athlete)
         {
+            ModelState.Remove("UserId");
+
+            var currentUser = await GetCurrentUserAsync();
+            athlete.UserId = currentUser.Id;
+           
             if (id != athlete.Id)
             {
                 return NotFound();
@@ -140,7 +145,7 @@ namespace XCoach.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", athlete.UserId);
+            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", athlete.UserId);
             return View(athlete);
         }
 

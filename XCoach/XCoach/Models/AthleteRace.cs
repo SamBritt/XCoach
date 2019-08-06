@@ -18,6 +18,6 @@ namespace XCoach.Models
         public Race Race { get; set; }
         [Required]
         public TimeSpan ProjectedTime { get; set; }
-        public TimeSpan ActualTime { get; set; }
+        public TimeSpan? ActualTime { get; set; }
     }
 }
