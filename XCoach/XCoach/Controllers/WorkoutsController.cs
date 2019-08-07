@@ -99,17 +99,25 @@ namespace XCoach.Controllers
         // GET: Workouts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var CurrentUser = await GetCurrentUserAsync();
+            var viewModel = new WorkoutEditViewModel
+            {
+                WorkoutTypes = await _context.WorkoutTypes.ToListAsync()
+            };
+
+            List<WorkoutType> typesToAdd = GetAllWorkoutTypes();
+            viewModel.WorkoutTypes = typesToAdd;
+            var workout = await _context.Workouts.FindAsync(id);
+            viewModel.Workout = workout;
             if (id == null)
             {
                 return NotFound();
-            }
-
-            var workout = await _context.Workouts.FindAsync(id);
+            } 
             if (workout == null)
             {
                 return NotFound();
             }
-            return View(workout);
+            return View(viewModel);
         }
 
         // POST: Workouts/Edit/5
@@ -117,8 +125,15 @@ namespace XCoach.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,Title,Description,WorkoutTypeId")] Workout workout)
+        public async Task<IActionResult> Edit(WorkoutEditViewModel viewModel, int id, [Bind("Id,Title,Description,WorkoutTypeId")] Workout workout)
         {
+
+            ModelState.Remove("Workout.UserId");
+
+            var currentUser = await GetCurrentUserAsync();
+            workout = viewModel.Workout;
+            workout.UserId = currentUser.Id;
+
             if (id != workout.Id)
             {
                 return NotFound();
@@ -144,6 +159,7 @@ namespace XCoach.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            viewModel.WorkoutTypes = await _context.WorkoutTypes.ToListAsync();
             return View(workout);
         }
 
