@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using XCoach.Models;
 
 namespace XCoach.Controllers
 {
+    [Authorize]
     public class RacesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -82,6 +84,7 @@ namespace XCoach.Controllers
         // GET: Races/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            
             if (id == null)
             {
                 return NotFound();
@@ -100,8 +103,13 @@ namespace XCoach.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,MeetName,Location,EventName,Distance,EventDate")] Race race)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,MeetName,Location,EventName,Distance,EventDate")] Race race)
         {
+            ModelState.Remove("UserId");
+
+            var currentUser = await GetCurrentUserAsync();
+            race.UserId = currentUser.Id;
+
             if (id != race.Id)
             {
                 return NotFound();

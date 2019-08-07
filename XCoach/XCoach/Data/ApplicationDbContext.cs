@@ -26,6 +26,27 @@ namespace XCoach.Data
         {
             base.OnModelCreating(builder);
 
+            //To restrict cascade deletion
+            builder.Entity<Athlete>()
+               .HasMany(a => a.AthleteWorkouts)
+               .WithOne(a => a.Athlete)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Workout>()
+               .HasMany(w => w.AthleteWorkouts)
+               .WithOne(w => w.Workout)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Athlete>()
+               .HasMany(a => a.AthleteRaces)
+               .WithOne(a => a.Athlete)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Race>()
+               .HasMany(w => w.AthleteRaces)
+               .WithOne(w => w.Race)
+               .OnDelete(DeleteBehavior.Restrict);
+
             ApplicationUser user = new ApplicationUser
             {
                 FirstName = "admin",

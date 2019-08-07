@@ -98,13 +98,13 @@ namespace XCoach.Controllers
             {
                 return NotFound();
             }
-
+            var currentUser = await GetCurrentUserAsync();
             var athlete = await _context.Athletes.FindAsync(id);
             if (athlete == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", athlete.UserId);
+            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", athlete.UserId);
             return View(athlete);
         }
 
@@ -113,8 +113,13 @@ namespace XCoach.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,FirstName,LastName,Gender,Grade,MPW")] Athlete athlete)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Gender,Grade,MPW")] Athlete athlete)
         {
+            ModelState.Remove("UserId");
+
+            var currentUser = await GetCurrentUserAsync();
+            athlete.UserId = currentUser.Id;
+           
             if (id != athlete.Id)
             {
                 return NotFound();
@@ -140,7 +145,7 @@ namespace XCoach.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", athlete.UserId);
+            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", athlete.UserId);
             return View(athlete);
         }
 
@@ -151,9 +156,15 @@ namespace XCoach.Controllers
             {
                 return NotFound();
             }
+            var currentUser = await GetCurrentUserAsync();
 
             var athlete = await _context.Athletes
                 .Include(a => a.User)
+                .Include(a => a.AthleteRaces)
+                .ThenInclude(ar => ar.Athlete)
+                .Include(a => a.AthleteWorkouts)
+                .ThenInclude(aw => aw.Athlete)
+                .Where(a => a.Id == id)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (athlete == null)
             {
@@ -168,8 +179,32 @@ namespace XCoach.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var user = await GetCurrentUserAsync();
+            var userId = user.Id;
             var athlete = await _context.Athletes.FindAsync(id);
-            _context.Athletes.Remove(athlete);
+            var athleteWorkouts = _context.AthleteWorkouts;
+            var athleteRaces = _context.AthleteRaces;
+
+            foreach(AthleteWorkout wo in athleteWorkouts)
+            {
+                if(wo.AthleteId == athlete.Id && userId == athlete.UserId)
+                {
+                    athleteWorkouts.Remove(wo);
+                }
+                
+            }
+            foreach(AthleteRace ra in athleteRaces)
+            {
+                if(ra.AthleteId == athlete.Id && userId == athlete.UserId)
+                {
+                    athleteRaces.Remove(ra);
+                }
+            }
+            if(userId == athlete.UserId)
+            {
+                _context.Athletes.Remove(athlete);
+            }
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
