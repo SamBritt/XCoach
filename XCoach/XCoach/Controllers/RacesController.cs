@@ -28,7 +28,8 @@ namespace XCoach.Controllers
         // GET: Races
         public async Task<IActionResult> Index()
         {
-            var athleteRaces = await _context.Races.Include(r => r.AthleteRaces).ToListAsync();
+            var currentUser = await GetCurrentUserAsync();
+            var athleteRaces = await _context.Races.Include(r => r.AthleteRaces).Where(r => r.UserId == currentUser.Id).ToListAsync();
 
             //return View(await _context.Races.ToListAsync());
             return View(athleteRaces);

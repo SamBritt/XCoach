@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,17 +17,23 @@ namespace XCoach.Controllers
     public class AthleteWorkoutsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AthleteWorkoutsController(ApplicationDbContext context)
+        public AthleteWorkoutsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: AthleteWorkouts
         public async Task<IActionResult> Index()
         {
+            var currentUser = await GetCurrentUserAsync();
             var applicationDbContext = _context.AthleteWorkouts.Include(a => a.Athlete)
-                                                               .Include(a => a.Workout);
+                                                               .Include(a => a.Workout)
+                                                               .Where(a => a.Athlete.UserId == currentUser.Id)
+                                                               .Where(a => a.Workout.UserId == currentUser.Id);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -57,9 +64,10 @@ namespace XCoach.Controllers
         // GET: AthleteWorkouts/Create
         public async Task<IActionResult> Create()
         {
+            var currentUser = await GetCurrentUserAsync();
             var viewModel = new AthleteWorkoutCreateViewModel
             {
-                AvailableAthletes = await _context.Athletes.ToListAsync()
+                AvailableAthletes = await _context.Athletes.Where(a => a.UserId == currentUser.Id).ToListAsync()
             };
 
             return View(viewModel);

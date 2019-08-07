@@ -17,7 +17,9 @@ namespace XCoach.Models
         public Athlete Athlete { get; set; }
         public Race Race { get; set; }
         [Required]
+        [Display(Name = "Projected Time")]
         public TimeSpan ProjectedTime { get; set; }
+        [Display(Name = "Actual Time")]
         public TimeSpan? ActualTime { get; set; }
     }
 }

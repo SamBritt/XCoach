@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,16 +16,23 @@ namespace XCoach.Controllers
     public class AthleteRacesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AthleteRacesController(ApplicationDbContext context)
+        public AthleteRacesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: AthleteRaces
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.AthleteRaces.Include(a => a.Athlete).Include(a => a.Race);
+            var currentUser = await GetCurrentUserAsync();
+            var applicationDbContext = _context.AthleteRaces.Include(a => a.Athlete)
+                                                            .Include(a => a.Race)
+                                                            .Where(a => a.Athlete.UserId == currentUser.Id)
+                                                            .Where(a => a.Race.UserId == currentUser.Id);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -49,9 +57,10 @@ namespace XCoach.Controllers
         }
 
         // GET: AthleteRaces/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName");
+            var currentUser = await GetCurrentUserAsync();
+            ViewData["AthleteId"] = new SelectList(_context.Athletes.Where(a => a.UserId == currentUser.Id), "Id", "FirstName");
             //ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName");
             return View();
         }
@@ -86,12 +95,13 @@ namespace XCoach.Controllers
             }
 
             var athleteRace = await _context.AthleteRaces.FindAsync(id);
+            
             if (athleteRace == null)
             {
                 return NotFound();
             }
-            ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteRace.AthleteId);
-            ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName", athleteRace.RaceId);
+            //ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteRace.AthleteId);
+            //ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName", athleteRace.RaceId);
             return View(athleteRace);
         }
 
