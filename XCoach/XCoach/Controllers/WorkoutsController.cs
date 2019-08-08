@@ -27,9 +27,11 @@ namespace XCoach.Controllers
         // GET: Workouts
         public async Task<IActionResult> Index()
         {
+            var currentUser = await GetCurrentUserAsync();
             var workouts = await _context.Workouts
                 .Include(w => w.WorkoutType)
                 .Where(w => w.WorkoutType.Id == w.WorkoutTypeId)
+                .Where(w => w.UserId == currentUser.Id)
                 .ToListAsync() ;
 
             return View(workouts);

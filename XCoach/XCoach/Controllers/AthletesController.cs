@@ -28,13 +28,15 @@ namespace XCoach.Controllers
         // GET: Athletes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Athletes.Include(a => a.User);
+            var currentUser = await GetCurrentUserAsync();
+            var applicationDbContext = _context.Athletes.Include(a => a.User).Where(a => a.UserId == currentUser.Id);
             return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Athletes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var currentUser = await GetCurrentUserAsync();
             if (id == null)
             {
                 return NotFound();
@@ -53,7 +55,7 @@ namespace XCoach.Controllers
             AthleteDetailsViewModel model = new AthleteDetailsViewModel
             {
                 Athlete = athlete,
-                AthleteWorkouts = await _context.AthleteWorkouts.Select(a => a).Where(a => a.AthleteId == id).ToListAsync(),
+                AthleteWorkouts = await _context.AthleteWorkouts.Select(a => a).Where(a => a.AthleteId == id && a.Athlete.UserId == currentUser.Id).ToListAsync(),
 
             };
 
@@ -64,7 +66,7 @@ namespace XCoach.Controllers
         // GET: Athletes/Create
         public IActionResult Create()
         {
-            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+        
             return View();
         }
 
