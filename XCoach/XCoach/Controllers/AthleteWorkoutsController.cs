@@ -125,8 +125,8 @@ namespace XCoach.Controllers
             {
                 return NotFound();
             }
-            ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteWorkout.AthleteId);
-            ViewData["WorkoutId"] = new SelectList(_context.Workouts, "Id", "Description", athleteWorkout.WorkoutId);
+            //ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteWorkout.AthleteId);
+            //ViewData["WorkoutId"] = new SelectList(_context.Workouts, "Id", "Description", athleteWorkout.WorkoutId);
             return View(athleteWorkout);
         }
 
