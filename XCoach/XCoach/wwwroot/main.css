@@ -1,0 +1,19 @@
+﻿body {
+    background-color: #3b3d40;
+    color: whitesmoke;
+}
+.athleteCard{
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    flex-flow: row;
+    color: black;
+}
+.cardStyle {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.card-link{
+    display: flex;
+    justify-content: center;
+}

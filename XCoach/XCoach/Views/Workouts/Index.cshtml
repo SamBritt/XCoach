@@ -6,45 +6,33 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Workouts</h1>
+<h1 style="text-align: center">Workouts</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a style = "color: white" asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.WorkoutType.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorkoutType.Name)
-            </td>
-            <td>
-                <a asp-controller = "AthleteWorkouts" asp-action="Create" asp-route-id="@item.Id">Assign</a> |
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<section class="athleteCard">
+    @foreach (var item in Model)
+
+    {
+        <div class="card cardStyle" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </h5>
+                <hr />
+                <p class="card-text">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </p>
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => model.WorkoutType.Name):
+                    @Html.DisplayFor(modelItem => item.WorkoutType.Name)
+                </p>
+                <a asp-controller="AthleteWorkouts" class = "card-link" asp-action="Create" asp-route-id="@item.Id">Assign</a>
+                <a asp-action="Edit" class = "card-link" asp-route-id="@item.Id">Edit</a>
+                <a asp-action="Details" class = "card-link" asp-route-id="@item.Id">Details</a>
+                <a asp-action="Delete" class = "card-link" asp-route-id="@item.Id">Delete</a>
+            </div>
+        </div>
+    }
+</section>

@@ -4,64 +4,47 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Races</h1>
+<h1 style="text-align: center">Races</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a style = "color: white" asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
+<section class="athleteCard">
+    @foreach (var item in Model)
 
-            <th>
-                @Html.DisplayNameFor(model => model.MeetName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EventName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Distance)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EventDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AthleteRaces.Count)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MeetName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EventName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Distance)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EventDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AthleteRaces.Count)
-            </td>
-            <td>
-                <a asp-controller = "AthleteRaces" asp-action="Create" asp-route-id="@item.Id">Add Athletes</a> |
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    {
+        <div class="card cardStyle" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    @Html.DisplayFor(modelItem => item.MeetName)
+                </h5>
+                <hr />
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => model.Location):
+                    @Html.DisplayFor(modelItem => item.Location)
+                </p>
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => model.EventDate):
+                    @Html.DisplayFor(modelItem => item.EventDate)
+                </p>
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => model.EventName):
+                    @Html.DisplayFor(modelItem => item.EventName)
+                </p>
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => model.Distance):
+                    @Html.DisplayFor(modelItem => item.Distance)
+                </p>
+                <p class="card-text">
+                    Athletes Racing:
+                    (@Html.DisplayFor(modelItem => item.AthleteRaces.Count))
+                </p>
+                <a asp-controller="AthleteRaces" class = "card-link" asp-action="Create" asp-route-id="@item.Id">Add Athletes</a>
+                <a asp-action="Edit" class = "card-link" asp-route-id="@item.Id">Edit</a>
+                <a asp-action="Details" class = "card-link" asp-route-id="@item.Id">Details</a>
+                <a asp-action="Delete" class = "card-link" asp-route-id="@item.Id">Delete</a>
+            </div>
+        </div>
+    }
+
+</section>

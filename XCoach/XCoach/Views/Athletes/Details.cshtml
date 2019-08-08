@@ -4,10 +4,9 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1 style="text-align: center">Details</h1>
 
-<div>
-    <h4>Athlete</h4>
+<div style="display: flex; justify-content: center">
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -42,48 +41,34 @@
         </dd>
 
     </dl>
-    <table class="table">
-        @foreach (var i in Model.UpComingWorkouts)
-        {
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => i.WorkoutDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => i.Workout.Title)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => i.Pace)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => i.Repetition)
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        @Html.DisplayFor(model => i.WorkoutDate)
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-controller="Workouts" asp-route-id="@i.Workout.Id">
-                            @Html.DisplayFor(model => i.Workout.Title)
-                        </a>
-
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => i.Pace)/mi
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => i.Repetition)x
-                    </td>
-
-                </tr>
-            </tbody>
-        }
-    </table>
 </div>
+<section class="athleteCard">
+    @foreach (var i in Model.UpComingWorkouts)
+    {
+        <div class="card cardStyle" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a asp-action="Details" asp-controller="Workouts" asp-route-id="@i.Workout.Id">
+                        @Html.DisplayFor(model => i.Workout.Title)
+                    </a>
+                </h5>
+                <hr />
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => i.WorkoutDate):
+                    @Html.DisplayFor(model => i.WorkoutDate)
+                </p>
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => i.Pace):
+                    @Html.DisplayFor(model => i.Pace)/mi
+                </p>
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => i.Repetition):
+                    @Html.DisplayFor(model => i.Repetition)x
+                </p>
+            </div>
+        </div>
+    }
+</section>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Athlete.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>

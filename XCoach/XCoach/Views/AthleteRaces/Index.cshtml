@@ -4,46 +4,32 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Race Results Per Athlete</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Athlete)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Race.MeetName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ActualTime)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Athlete.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Race.MeetName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ActualTime)
-            </td>
-            <td>
+<h1 style="text-align: center">Race Results Per Athlete</h1>
+<section class="athleteCard">
+    @foreach (var item in Model)
+    {
+        <div class="card cardStyle" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    @Html.DisplayFor(modelItem => item.Athlete.FirstName)
+                    @Html.DisplayFor(modelItem => item.Athlete.LastName)
+                </h5>
+                <hr />
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => model.Race.MeetName):
+                    @Html.DisplayFor(modelItem => item.Race.MeetName)
+                </p>
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => model.ProjectedTime):
+                    @Html.DisplayFor(modelItem => item.ProjectedTime)
+                </p>
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => model.ActualTime):
+                    @Html.DisplayFor(modelItem => item.ActualTime)
+                </p>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+            </div>
+        </div>
+    }
+</section>

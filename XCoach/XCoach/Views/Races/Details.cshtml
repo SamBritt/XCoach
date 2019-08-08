@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1 style="text-align; center">Details</h1>
 
 <div>
     <h4>Race</h4>
@@ -41,47 +41,30 @@
             @Html.DisplayFor(model => model.EventDate)
         </dd>
     </dl>
-    <table class="table">
-        @foreach (var item in Model.AthleteRaces)
-        {
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => item.Athlete.FirstName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => item.Athlete.LastName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => item.ProjectedTime)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => item.ActualTime)
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-         
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(model => item.Athlete.FirstName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.Athlete.LastName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.ProjectedTime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.ActualTime)
-                            <a asp-action="Index" asp-controller = "AthleteRaces">Edit Results</a>
-                        </td>
-                    </tr>
-                
-            </tbody>
-        }
-    </table>
 </div>
+<section class="athleteCard">
+    @foreach (var item in Model.AthleteRaces)
+    {
+        <div class="card cardStyle" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    @Html.DisplayFor(model => item.Athlete.FirstName)
+                    @Html.DisplayFor(model => item.Athlete.LastName)
+                </h5>
+                <hr />
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => item.ProjectedTime):
+                    @Html.DisplayFor(model => item.ProjectedTime)
+                </p>
+                <p class="card-text">
+                    @Html.DisplayNameFor(model => item.ActualTime):
+                    @Html.DisplayFor(model => item.ActualTime)
+                </p>
+                <a asp-action="Index" asp-controller="AthleteRaces">Edit Results</a>
+            </div>
+        </div>
+    }
+</section>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
