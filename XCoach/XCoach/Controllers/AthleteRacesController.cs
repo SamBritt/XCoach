@@ -61,7 +61,7 @@ namespace XCoach.Controllers
         {
             var currentUser = await GetCurrentUserAsync();
             ViewData["AthleteId"] = new SelectList(_context.Athletes.Where(a => a.UserId == currentUser.Id), "Id", "FirstName");
-            //ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName");
+
             return View();
         }
 
@@ -79,29 +79,31 @@ namespace XCoach.Controllers
                 athleteRace.RaceId = id;
                 _context.Add(athleteRace);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Races");
             }
             ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteRace.AthleteId);
-            //ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName", athleteRace.RaceId);
             return View(athleteRace);
         }
 
         // GET: AthleteRaces/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var currentUser = await GetCurrentUserAsync();
+
             if (id == null)
             {
                 return NotFound();
             }
 
             var athleteRace = await _context.AthleteRaces.FindAsync(id);
-            
+            athleteRace.Athlete = await _context.Athletes.FirstOrDefaultAsync(a => a.Id == athleteRace.AthleteId);
+            athleteRace.Race = await _context.Races.FirstOrDefaultAsync(r => r.Id == athleteRace.RaceId);
             if (athleteRace == null)
             {
                 return NotFound();
             }
-            //ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteRace.AthleteId);
-            //ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName", athleteRace.RaceId);
+            ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteRace.AthleteId);
+            ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName", athleteRace.RaceId);
             return View(athleteRace);
         }
 
@@ -110,8 +112,11 @@ namespace XCoach.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AthleteId,RaceId,ProjectedTime,ActualTime")] AthleteRace athleteRace)
+        public async Task<IActionResult> Edit(int id, AthleteRace athleteRace)
         {
+          
+            athleteRace.Athlete = await _context.Athletes.FirstOrDefaultAsync(a => a.Id == athleteRace.AthleteId);
+            athleteRace.Race = await _context.Races.FirstOrDefaultAsync(r => r.Id == athleteRace.RaceId);
             if (id != athleteRace.Id)
             {
                 return NotFound();
@@ -135,7 +140,7 @@ namespace XCoach.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Races");
             }
             ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteRace.AthleteId);
             ViewData["RaceId"] = new SelectList(_context.Races, "Id", "EventName", athleteRace.RaceId);

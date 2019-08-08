@@ -103,24 +103,12 @@ namespace XCoach.Controllers
                     
                     _context.Add(aw);
                 }
-                //athleteWorkout.AthleteIds = athleteIds;
-                
-                //_context.Add(viewModel);
+               
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Workouts");
             }
             
-                //if (ModelState.IsValid)
-                //{
-                //    athleteWorkout.WorkoutId = id;
-                //    athleteWorkout.AthleteIds = athleteIds;
-                //    _context.Add(athleteWorkout);
-                //    await _context.SaveChangesAsync();
-                //    return RedirectToAction(nameof(Index));
-                //}
-            
-            //ViewData["AthleteId"] = new SelectList(_context.Athletes, "Id", "FirstName", athleteWorkout.AthleteId);
-            //ViewData["WorkoutId"] = new SelectList(_context.Workouts, "Id", "Description", athleteWorkout.WorkoutId);
+      
             return View(viewModel);
         }
 

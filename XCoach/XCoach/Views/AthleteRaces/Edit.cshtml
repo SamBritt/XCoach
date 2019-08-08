@@ -6,16 +6,14 @@
 
 <h1>Edit</h1>
 
-<h4>AthleteRace</h4>
+<h4>Athlete's Times</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-
-            @Html.DisplayNameFor(model => model.Athlete.FirstName)
-            @Html.DisplayFor(model => model.Athlete.FirstName)
+            
             <div class="form-group">
                 <label asp-for="ProjectedTime" class="control-label"></label>
                 <input asp-for="ProjectedTime" class="form-control" />
