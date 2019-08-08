@@ -146,9 +146,15 @@ namespace XCoach.Controllers
             {
                 return NotFound();
             }
-
             var race = await _context.Races
+                .Include(a => a.User)
+                .Include(a => a.AthleteRaces)
+                .ThenInclude(ar => ar.Athlete)
+                .Where(a => a.Id == id)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            //var race = await _context.Races
+            //    .FirstOrDefaultAsync(m => m.Id == id);
             if (race == null)
             {
                 return NotFound();
@@ -162,8 +168,27 @@ namespace XCoach.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var user = await GetCurrentUserAsync();
+            var userId = user.Id;
             var race = await _context.Races.FindAsync(id);
-            _context.Races.Remove(race);
+            var athleteRaces = _context.AthleteRaces;
+
+            foreach (AthleteRace wo in athleteRaces)
+            {
+                if (wo.RaceId == race.Id && userId == race.UserId)
+                {
+                    athleteRaces.Remove(wo);
+                }
+
+            }
+            if (userId == race.UserId)
+            {
+                _context.Races.Remove(race);
+            }
+
+
+            //var race = await _context.Races.FindAsync(id);
+            //_context.Races.Remove(race);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
